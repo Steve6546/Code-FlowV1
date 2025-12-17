@@ -58,16 +58,12 @@ export function ErrorFallback({ error, resetError }: ErrorFallbackProps) {
       ) : null}
 
       <View style={styles.content}>
-        <View style={[styles.iconContainer, { backgroundColor: theme.error + "20" }]}>
-          <Feather name="zap-off" size={48} color={theme.error} />
-        </View>
-        
-        <ThemedText type="h2" style={styles.title}>
-          Oops! Thakira needs a restart
+        <ThemedText type="h1" style={styles.title}>
+          Something went wrong
         </ThemedText>
 
-        <ThemedText type="body" secondary style={styles.message}>
-          Something unexpected happened. Your memories are safe - just tap below to get back on track.
+        <ThemedText type="body" style={styles.message}>
+          Please reload the app to continue.
         </ThemedText>
 
         <Pressable
@@ -75,18 +71,17 @@ export function ErrorFallback({ error, resetError }: ErrorFallbackProps) {
           style={({ pressed }) => [
             styles.button,
             {
-              backgroundColor: theme.primary,
+              backgroundColor: theme.link,
               opacity: pressed ? 0.9 : 1,
               transform: [{ scale: pressed ? 0.98 : 1 }],
             },
           ]}
         >
-          <Feather name="refresh-cw" size={20} color="#FFFFFF" style={{ marginRight: Spacing.sm }} />
           <ThemedText
             type="body"
             style={[styles.buttonText, { color: theme.buttonText }]}
           >
-            Restart Thakira
+            Try Again
           </ThemedText>
         </Pressable>
       </View>
@@ -101,7 +96,7 @@ export function ErrorFallback({ error, resetError }: ErrorFallbackProps) {
           <View style={styles.modalOverlay}>
             <ThemedView style={styles.modalContainer}>
               <View style={styles.modalHeader}>
-                <ThemedText type="h3" style={styles.modalTitle}>
+                <ThemedText type="h2" style={styles.modalTitle}>
                   Error Details
                 </ThemedText>
                 <Pressable
@@ -155,32 +150,27 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
-    padding: Spacing.xxl,
+    padding: Spacing["2xl"],
   },
   content: {
     alignItems: "center",
     justifyContent: "center",
     gap: Spacing.lg,
     width: "100%",
-    maxWidth: 320,
-  },
-  iconContainer: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: Spacing.md,
+    maxWidth: 600,
   },
   title: {
     textAlign: "center",
+    lineHeight: 40,
   },
   message: {
     textAlign: "center",
+    opacity: 0.7,
+    lineHeight: 24,
   },
   topButton: {
     position: "absolute",
-    top: Spacing.xxl + Spacing.lg,
+    top: Spacing["2xl"] + Spacing.lg,
     right: Spacing.lg,
     width: 44,
     height: 44,
@@ -191,13 +181,18 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   button: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: Spacing.md,
-    borderRadius: BorderRadius.lg,
-    paddingHorizontal: Spacing.xl,
-    marginTop: Spacing.md,
+    paddingVertical: Spacing.lg,
+    borderRadius: BorderRadius.md,
+    paddingHorizontal: Spacing["2xl"],
+    minWidth: 200,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   buttonText: {
     fontWeight: "600",
