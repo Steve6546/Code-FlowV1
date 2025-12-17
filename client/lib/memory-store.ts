@@ -1,4 +1,11 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useReducer } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+} from "react";
 import * as FileSystem from "expo-file-system";
 import { Platform } from "react-native";
 import { nanoid } from "nanoid/non-secure";
@@ -92,7 +99,7 @@ function seedMemories(): MemoryItem[] {
       id: nanoid(),
       type: "voice",
       title: "Morning check-in",
-      content: "Voice note about today’s priorities.",
+      content: "Voice note about today's priorities.",
       createdAt: new Date(now - 1000 * 60 * 90).toISOString(),
       tags: ["work", "focus"],
       metadata: { durationSec: 38 },
@@ -227,8 +234,7 @@ export function getSmartSuggestions(items: MemoryItem[]) {
 }
 
 function isWithinHours(item: MemoryItem, hours: number) {
-  const diff =
-    Date.now() - new Date(item.createdAt ?? new Date(0)).getTime();
+  const diff = Date.now() - new Date(item.createdAt ?? new Date(0)).getTime();
   return diff < hours * 60 * 60 * 1000;
 }
 
