@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useHeaderHeight } from "@react-navigation/elements";
@@ -9,6 +9,7 @@ import { Card } from "@/components/Card";
 import { Button } from "@/components/Button";
 import { ThemedText } from "@/components/ThemedText";
 import Spacer from "@/components/Spacer";
+import { useMemoryStore } from "@/lib/memory-store";
 import { useTheme } from "@/hooks/useTheme";
 import { Spacing } from "@/constants/theme";
 
@@ -16,7 +17,21 @@ export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
+  const { items } = useMemoryStore();
+
+  const stats = useMemo(() => {
+    const total = items.length;
+    const byType = items.reduce<Record<string, number>>((acc, item) => {
+      acc[item.type] = (acc[item.type] || 0) + 1;
+      return acc;
+    }, {});
+    return { total, byType };
+  }, [items]);
+
+  const dividerColor = isDark
+    ? "rgba(255,255,255,0.12)"
+    : "rgba(0,0,0,0.08)";
 
   return (
     <KeyboardAwareScrollViewCompat
@@ -61,7 +76,7 @@ export default function ProfileScreen() {
         <Spacer height={Spacing.sm} />
         <View style={styles.statRow}>
           <View style={styles.statBlock}>
-            <ThemedText type="h3">128</ThemedText>
+            <ThemedText type="h3">{stats.total}</ThemedText>
             <ThemedText
               type="small"
               style={[styles.muted, styles.statLabelSpacing]}
@@ -70,12 +85,14 @@ export default function ProfileScreen() {
             </ThemedText>
           </View>
           <View style={styles.statBlock}>
-            <ThemedText type="h3">6</ThemedText>
+            <ThemedText type="h3">
+              {stats.byType.voice ?? stats.byType["voice"] ?? 0}
+            </ThemedText>
             <ThemedText
               type="small"
               style={[styles.muted, styles.statLabelSpacing]}
             >
-              Day streak
+              Voice entries
             </ThemedText>
           </View>
         </View>
@@ -84,19 +101,19 @@ export default function ProfileScreen() {
       <Card elevation={1} style={styles.card}>
         <ThemedText type="h4">Preferences</ThemedText>
         <Spacer height={Spacing.sm} />
-        <View style={styles.settingRow}>
+        <View style={[styles.settingRow, { borderBottomColor: dividerColor }]}>
           <ThemedText type="body">Theme</ThemedText>
           <ThemedText type="small" style={styles.muted}>
             Light / Dark / System
           </ThemedText>
         </View>
-        <View style={styles.settingRow}>
+        <View style={[styles.settingRow, { borderBottomColor: dividerColor }]}>
           <ThemedText type="body">Language</ThemedText>
           <ThemedText type="small" style={styles.muted}>
             English / Arabic
           </ThemedText>
         </View>
-        <View style={styles.settingRow}>
+        <View style={[styles.settingRow, { borderBottomColor: dividerColor }]}>
           <ThemedText type="body">Privacy</ThemedText>
           <ThemedText type="small" style={styles.muted}>
             Microphone & camera permissions
@@ -109,13 +126,13 @@ export default function ProfileScreen() {
       <Card elevation={1} style={styles.card}>
         <ThemedText type="h4">Data</ThemedText>
         <Spacer height={Spacing.sm} />
-        <View style={styles.settingRow}>
+        <View style={[styles.settingRow, { borderBottomColor: dividerColor }]}>
           <ThemedText type="body">Export</ThemedText>
           <ThemedText type="small" style={styles.muted}>
             Save a backup locally
           </ThemedText>
         </View>
-        <View style={styles.settingRow}>
+        <View style={[styles.settingRow, { borderBottomColor: dividerColor }]}>
           <ThemedText type="body">Clear cache</ThemedText>
           <ThemedText type="small" style={styles.muted}>
             Free up device storage
@@ -159,6 +176,6 @@ const styles = StyleSheet.create({
   settingRow: {
     paddingVertical: Spacing.sm,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: "rgba(0,0,0,0.08)",
+    borderBottomColor: "transparent",
   },
 });
